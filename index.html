@@ -86,8 +86,11 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(
 .add-guest-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;border:1px dashed var(--rule);border-radius:10px;background:none;color:var(--navy);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s,border-color .15s;margin-bottom:24px}
 .add-guest-btn:hover{background:var(--ice);border-color:var(--slate)}
 
-.copy-link-btn{display:inline-block;background:var(--navy);color:var(--white);font-size:14px;font-weight:600;padding:12px 24px;border-radius:6px;border:none;cursor:pointer;text-decoration:none;transition:background .15s;font-family:inherit}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.copy-link-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--navy);color:var(--white);font-size:14px;font-weight:600;padding:12px 24px;border-radius:6px;border:none;cursor:pointer;text-decoration:none;transition:background .15s;font-family:inherit;flex:1;min-width:180px;max-width:260px}
 .copy-link-btn:hover{background:var(--navy-hover)}
+.outlook-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--white);color:var(--navy);font-size:14px;font-weight:600;padding:12px 24px;border-radius:6px;border:2px solid var(--navy);cursor:pointer;text-decoration:none;transition:background .15s,color .15s;font-family:inherit;flex:1;min-width:180px;max-width:260px}
+.outlook-btn:hover{background:var(--navy);color:var(--white)}
 .copy-confirm{color:#2E7D32;font-size:13px;font-weight:600;margin-top:10px;opacity:0;transition:opacity .15s}
 .copy-confirm.show{animation:fadeInOut 1.6s ease forwards}
 @keyframes fadeInOut{0%{opacity:0}15%{opacity:1}75%{opacity:1}100%{opacity:0}}
@@ -148,7 +151,7 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
   <div class="section-label">How to Book</div>
   <div class="card">
     <h3>Build Your Reservation Request</h3>
-    <p>Fill in your guest details below, pick your payment method, and copy the email template. We will confirm everything and get it set up.</p>
+    <p>Shane and Crystal are your dedicated booking contacts. Fill in your details below, then send us the email. We will confirm everything and get it set up.</p>
 
     <div class="toggle-wrap">
       <div class="toggle-track" id="toggleTrack">
@@ -171,7 +174,10 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
     </div>
 
     <button class="add-guest-btn" onclick="addGuest()">+ Add another guest</button>
-    <button class="copy-link-btn" id="copyBtn" onclick="copyEmail()">Copy Email Template</button>
+    <div class="btn-row">
+      <button class="outlook-btn" onclick="openOutlook()">Open in Outlook</button>
+      <button class="copy-link-btn" id="copyBtn" onclick="copyEmail()">Copy Email Template</button>
+    </div>
     <div id="copyConfirm" class="copy-confirm">Copied to clipboard</div>
 
     <div class="template-preview" id="previewWrap">
@@ -235,7 +241,7 @@ if(company){
   document.title=company+' | UF Hotel Booking Guide';
 }
 
-var guests=[{name:'',checkIn:null,checkOut:null,room:'No Preference'}];
+var guests=[{name:'',checkIn:null,checkOut:null,room:''}];
 var currentMethod='directbill';
 var cal={open:false,gi:-1,month:new Date().getMonth(),year:new Date().getFullYear(),phase:'checkin'};
 
@@ -262,9 +268,10 @@ function renderGuests(){
     h+='<svg class="cal-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6.5h12" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 1.5v3M10.5 1.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
     h+='<span>'+dtxt+'</span></button>';
     h+='<select class="room-select" onchange="guests['+i+'].room=this.value;updatePreview()">';
-    h+='<option'+(g.room==='No Preference'?' selected':'')+'>No Preference</option>';
-    h+='<option'+(g.room==='King'?' selected':'')+'>King</option>';
-    h+='<option'+(g.room==='Double Queen'?' selected':'')+'>Double Queen</option>';
+    h+='<option value="" disabled'+(g.room===''?' selected':'')+'>Room Type</option>';
+    h+='<option value="King"'+(g.room==='King'?' selected':'')+'>King</option>';
+    h+='<option value="Double Queen"'+(g.room==='Double Queen'?' selected':'')+'>Double Queen</option>';
+    h+='<option value="No Room Preference"'+(g.room==='No Room Preference'?' selected':'')+'>No Room Preference</option>';
     h+='</select></div></div>';
   }
   c.innerHTML=h;
@@ -291,7 +298,11 @@ function openCal(gi){
 }
 function closeCal(){
   cal.open=false;
-  document.getElementById('calDropdown').classList.remove('open');
+  var dd=document.getElementById('calDropdown');
+  if(dd){
+    dd.classList.remove('open');
+    document.getElementById('guestsContainer').after(dd);
+  }
 }
 
 function renderCal(){
@@ -376,7 +387,7 @@ function addGuest(){
     name:'',
     checkIn:src.checkIn?new Date(src.checkIn):null,
     checkOut:src.checkOut?new Date(src.checkOut):null,
-    room:'No Preference'
+    room:''
   });
   renderGuests();updatePreview();
   var inputs=document.querySelectorAll('.guest-name');
@@ -404,7 +415,7 @@ function switchPay(m){
   setTimeout(function(){updatePreview();pw.classList.remove('switching')},200);
 }
 
-function buildEmail(){
+function buildEmailParts(){
   var n=guests.length;
   var rw=n===1?'a room':n+' rooms';
   var subj='Reservation Request - '+deptName;
@@ -414,17 +425,29 @@ function buildEmail(){
     var nm=g.name.trim()||'TBD';
     var dt=g.checkIn&&g.checkOut?fmtD(g.checkIn)+' to '+fmtD(g.checkOut):'Dates TBD';
     var prefix=n===1?'Guest: ':'Guest '+(i+1)+': ';
-    lines+=prefix+nm+' | '+dt+' | '+g.room+'\n';
+    var rm=g.room||'No Room Preference';
+    lines+=prefix+nm+' | '+dt+' | '+rm+'\n';
   }
   var pay=currentMethod==='directbill'?'Payment: Direct bill to '+deptName:'Payment: P-Card authorization';
-  return 'To: srclougherty@hiltongainesvilleuf.com; cmccoy@hiltongainesvilleuf.com\n'+
-    'Subject: '+subj+'\n\n'+
-    'Hi Shane and Crystal,\n\n'+
-    'We need to book '+rw+' under our UF rate.\n\n'+
-    lines+'\n'+pay+'\n\nThank you!';
+  var body='Hi Shane and Crystal,\n\nWe need to book '+rw+' under our UF rate.\n\n'+lines+'\n'+pay+'\n\nThank you!';
+  return {
+    to:'srclougherty@hiltongainesvilleuf.com;cmccoy@hiltongainesvilleuf.com',
+    subject:subj,
+    body:body
+  };
+}
+function buildEmail(){
+  var p=buildEmailParts();
+  return 'To: '+p.to+'\nSubject: '+p.subject+'\n\n'+p.body;
 }
 function updatePreview(){
   document.getElementById('templateText').textContent=buildEmail();
+}
+
+function openOutlook(){
+  var p=buildEmailParts();
+  var url='https://outlook.office.com/mail/deeplink/compose?to='+encodeURIComponent(p.to)+'&subject='+encodeURIComponent(p.subject)+'&body='+encodeURIComponent(p.body);
+  window.open(url,'_blank');
 }
 
 function copyEmail(){
