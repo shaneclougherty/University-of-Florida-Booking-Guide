@@ -109,7 +109,7 @@ body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(
 .faq-chevron{flex-shrink:0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--ice);transition:transform .25s,background .25s,color .25s;color:var(--slate)}
 .faq-item.open .faq-chevron{transform:rotate(180deg);background:var(--navy);color:var(--white)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 20px;font-size:14px;line-height:1.65;color:var(--text-secondary)}
-.faq-item.open .faq-a{max-height:300px;padding:0 20px 20px}
+.faq-item.open .faq-a{max-height:500px;padding:0 20px 20px}
 
 footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule);margin-top:44px}
 .fname{font-family:Georgia,'Times New Roman',serif;font-size:15px;font-weight:400;color:var(--text)}
@@ -135,7 +135,7 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
 
 <section class="callout">
   <div class="rate">$149 / night</div>
-  <div class="rate-note">UF negotiated rate, standard king or double queen</div>
+  <div class="rate-note">UF negotiated rate</div>
 </section>
 
 <div class="section">
@@ -151,7 +151,7 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
   <div class="section-label">How to Book</div>
   <div class="card">
     <h3>Build Your Reservation Request</h3>
-    <p>Shane and Crystal are your dedicated booking contacts. Fill in your details below, then send us the email. We will confirm everything and get it set up.</p>
+    <p>Shane and Crystal are your dedicated booking contacts. Fill in your details below and send us the email. We'll reply with a confirmation once your reservation is set up.</p>
 
     <div class="toggle-wrap">
       <div class="toggle-track" id="toggleTrack">
@@ -191,7 +191,7 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
   <ul class="faq-list">
     <li class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I book through Concur or UF GO?<span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
-      <div class="faq-a">Yes, but rooms booked through Concur or UF GO work differently. The guest pays at check-in with a personal or department card, tax exemption does not apply automatically, and Hilton's standard cancellation policy applies. To get the full benefits of the UF rate (tax-exempt, prepaid, flexible cancellation), book directly through us using the email template above.</div>
+      <div class="faq-a">You can book through Concur or UF GO, but it takes extra steps. Concur loads multiple Hilton rates, and the default is usually not your negotiated UF rate. If you book a different rate, Hilton's standard cancellation policy applies and you lose the flexibility that comes with your UF rate. Tax exemption and prepaid billing are also not applied automatically, and you would need to contact us separately with your confirmation number to set those up. Booking directly through us handles everything in one step: the right rate, tax-exempt, prepaid, flexible cancellation, no follow-up needed.</div>
     </li>
     <li class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What information do you need from us?<span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
@@ -200,6 +200,10 @@ footer{text-align:center;padding:48px 24px 56px;border-top:1px solid var(--rule)
     <li class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What if I need rooms for multiple travelers?<span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
       <div class="faq-a">Same process. Just add each guest using the form above and we will take care of the rest. For blocks of 10 or more rooms, contact our sales team directly so we can set up a group block with dedicated support.</div>
+    </li>
+    <li class="faq-item">
+      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I cancel or modify a reservation?<span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="faq-a">Just reply to your confirmation email and let us know what changed. We'll update the reservation and send a new confirmation. No fees, no penalties, and no portal to navigate. Just tell us and it's done.</div>
     </li>
   </ul>
 </div>
